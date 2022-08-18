@@ -2,53 +2,37 @@ package com.example.contactsrealmdb.data
 
 
 import android.util.Log
-import io.realm.Realm
-import io.realm.RealmResults
-import io.realm.kotlin.where
+import com.example.contactsrealmdb.data.model.Contact
 import java.util.*
 
 
-class ContactRepositoryImpl(
-    private val realm: Realm
-) : ContactRepository {
+class ContactRepositoryImpl(private val contactsDao: ContactsDao) : ContactRepository {
 
-    override fun addContact(name: String, surname: String, number: String) {
-        realm.executeTransaction {
-            it.createObject(Contact::class.java, UUID.randomUUID().toString()).apply {
-                this.name = name
-                this.surname = surname
-                this.number = number
-            }
-            Log.d("Check", "Object Created")
-        }
+    override suspend fun addContact(name: String?, surname: String?, number: String?) {
+        val contact = Contact(
+            id = UUID.randomUUID().toString(),
+            name = name,
+            surname = surname,
+            number = number
+        )
+        contactsDao.create(contact)
     }
 
-    override suspend fun getContact(): List<Contact> {
-        return realm.where(Contact::class.java).findAll()
+    override suspend fun getContacts(): List<Contact> {
+        return contactsDao.read()
     }
 
     override suspend fun deleteContact(id: String) {
-        Log.d("Check", "Object Deleted1")
-        realm.executeTransaction { transactionRealm ->
-            val result: RealmResults<Contact>  = transactionRealm.where(Contact::class.java).equalTo("id", id).findAll()
-            result.deleteFirstFromRealm()
-
+        val contactList = contactsDao.getContact(id)
+        for (contact in contactList) {
+            contactsDao.delete(contact)
         }
-        Log.d("Check", "Object Deleted2")
     }
 
-    override fun editContact(id: String, name: String, surname: String, number: String) {
-
-
-        realm.beginTransaction()
-        val contact = realm.where(Contact::class.java).equalTo("id", id).findFirst()
-        contact?.name = name
-        contact?.surname = surname
-        contact?.number = number
-        if (contact != null) {
-            realm.insertOrUpdate(contact)
-        }
-        realm.commitTransaction()
+    override suspend fun editContact(id: String, name: String?, surname: String?, number: String?) {
+        val contact = Contact(id, name, surname, number)
+        contactsDao.update(contact)
     }
+
 
 }

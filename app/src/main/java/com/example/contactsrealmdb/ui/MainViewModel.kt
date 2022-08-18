@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.contactsrealmdb.base.BaseViewModel
 import com.example.contactsrealmdb.base.Event
 import com.example.contactsrealmdb.data.ContactRepository
+import com.example.contactsrealmdb.data.model.Contact
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val contactRepository: ContactRepository) : BaseViewModel<ViewState>() {
@@ -16,7 +17,6 @@ class MainViewModel(private val contactRepository: ContactRepository) : BaseView
     override fun initialViewState(): ViewState = ViewState(contacts = emptyList())
 
     override fun reduce(event: Event, previousState: ViewState): ViewState? {
-
         when (event) {
             is UiEvent.OnDeleteContactClicked -> {
                 viewModelScope.launch {
@@ -25,44 +25,30 @@ class MainViewModel(private val contactRepository: ContactRepository) : BaseView
                 }
                 return null
             }
-
-            is UiEvent.OnEditContactClicked -> {
+            is DataEvent.ContactEdited -> {
+                viewModelScope.launch {
+                    contactRepository.editContact(event.id, event.name, event.surname, event.number)
+                }
                 return null
             }
             is DataEvent.LoadContacts -> {
                 viewModelScope.launch {
-                    val list = contactRepository.getContact()
+                    val list = contactRepository.getContacts()
                     processDataEvent(DataEvent.OnContactsLoaded(list))
                 }
                 return null
-
             }
             is DataEvent.OnContactsLoaded -> {
                 Log.d("Check", event.contacts.toString())
                 return previousState.copy(contacts = event.contacts)
             }
+            is DataEvent.ContactAdded -> {
+                viewModelScope.launch {
+                    contactRepository.addContact(event.name, event.surname, event.number)
+                }
+                return null
+            }
             else -> return null
         }
     }
-
-
-//    val allContacts: ContactLiveData = ContactLiveData()
-//
-//    init {
-//        Log.d("Check", "view model init")
-//        allContacts.value = getAllContacts()
-//    }
-//
-//
-//    private fun getAllContacts(): List<Contact> {
-//
-//        return contactRepository.getContact()
-//
-//    }
-//
-//    fun deleteContact(id: String) {
-//        contactRepository.deleteContact(id)
-//    }
-
-
 }

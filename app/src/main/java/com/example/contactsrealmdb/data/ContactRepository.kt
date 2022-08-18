@@ -1,14 +1,14 @@
 package com.example.contactsrealmdb.data
 
-import com.example.contactsrealmdb.data.Contact
+import com.example.contactsrealmdb.data.model.Contact
 
 interface ContactRepository {
 
-    fun addContact(name: String, surname: String, number: String)
+    suspend fun addContact(name: String?, surname: String?, number: String?)
 
-    suspend fun getContact(): List<Contact>
+    suspend fun getContacts(): List<Contact>
 
     suspend fun deleteContact(id: String)
 
-    fun editContact(id: String, name: String, surname: String, number: String)
+    suspend fun editContact(id: String, name: String?, surname: String?, number: String?)
 }

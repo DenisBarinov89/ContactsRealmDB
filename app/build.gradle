@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'realm-android'
 }
 
 android {
@@ -41,6 +40,7 @@ dependencies {
     def koin_version = '3.1.5'
     def coroutines_version = '1.6.1'
     def lifecycle_version = '2.5.0-rc01'
+    def room_version = "2.4.3"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -56,6 +56,7 @@ dependencies {
     // Koin Core features
     implementation "io.insert-koin:koin-core:$koin_version"
     implementation "io.insert-koin:koin-android:$koin_version"
+
     // Koin Test features
     testImplementation "io.insert-koin:koin-test:$koin_version"
 
@@ -64,4 +65,9 @@ dependencies {
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    //Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation("androidx.room:room-ktx:$room_version")
 }

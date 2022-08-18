@@ -10,13 +10,21 @@ import com.example.contactsrealmdb.databinding.ActivityMainBinding
 import com.example.contactsrealmdb.ui.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity(), LifecycleObserver {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModel()
     private val rvContacts: RecyclerView by lazy { findViewById(R.id.rvContacts) }
-    private val adapter: ContactsAdapter by lazy { ContactsAdapter({ id -> viewModel.processUIEvent(UiEvent.OnDeleteContactClicked(id)) }) }
+    private val adapter: ContactsAdapter by lazy {
+        ContactsAdapter(
+            { id -> viewModel.processUIEvent(UiEvent.OnDeleteContactClicked(id)) },
+            { id ->
+                val intent = Intent(this, AddContactActivity::class.java)
+                intent.putExtra("id", id)
+                startActivity(intent)
+            })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,32 +33,22 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val adapter = ContactsAdapter (
-//            { id -> viewModel.deleteContact(id) },
-//            { id ->
-//                val intent = Intent(this, AddContactActivity::class.java)
-//                intent.putExtra("id", id)
-//                startActivity(intent)
-//            }
-//        )
-
-//        viewModel.allContacts.observe(this) {
-//            adapter.setData(it)
-//            Log.d("Check", "allContacts.observe")
-//        }
-
         viewModel.viewState.observe(this@MainActivity, ::render)
         rvContacts.adapter = adapter
 
         binding.fabAddContact.setOnClickListener {
-            startActivity(Intent(this, AddContactActivity::class.java))
+            val intent = Intent(this, AddContactActivity::class.java)
+            startActivity(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.processUIEvent(DataEvent.LoadContacts)
     }
 
     private fun render(viewState: ViewState) {
         Log.d("Check", "render")
         adapter.setData(viewState.contacts)
     }
-
-
 }
