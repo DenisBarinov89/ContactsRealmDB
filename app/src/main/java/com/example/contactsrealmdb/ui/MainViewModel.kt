@@ -39,7 +39,7 @@ class MainViewModel(private val contactRepository: ContactRepository) : BaseView
                 return null
             }
             is DataEvent.OnContactsLoaded -> {
-                Log.d("Check", event.contacts.toString())
+                Log.d("Check", "size ${event.contacts.size}")
                 return previousState.copy(contacts = event.contacts)
             }
             is DataEvent.ContactAdded -> {

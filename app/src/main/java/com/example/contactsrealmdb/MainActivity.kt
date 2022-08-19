@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun render(viewState: ViewState) {
         Log.d("Check", "render")
+
+
+
         adapter.setData(viewState.contacts)
     }
 }

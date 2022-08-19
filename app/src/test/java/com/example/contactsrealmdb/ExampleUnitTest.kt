@@ -24,6 +24,7 @@ class ExampleUnitTest {
             number = "9999999"
         )
 
+
         //Добавляем контакт в список
         contactRepository.addContact(contact)
 
