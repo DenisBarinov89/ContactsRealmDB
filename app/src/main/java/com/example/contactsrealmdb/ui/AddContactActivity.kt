@@ -40,8 +40,8 @@ class AddContactActivity : AppCompatActivity() {
                         )
                     )
                 }
-                finish()
             }
+            finish()
         }
     }
 }
