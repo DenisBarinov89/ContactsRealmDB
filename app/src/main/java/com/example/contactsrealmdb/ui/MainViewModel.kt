@@ -7,8 +7,9 @@ import com.example.contactsrealmdb.base.Event
 import com.example.contactsrealmdb.data.ContactRepository
 import com.example.contactsrealmdb.data.model.Contact
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(private val contactRepository: ContactRepository) : BaseViewModel<ViewState>() {
+class MainViewModel @Inject constructor(private val contactRepository: ContactRepository) : BaseViewModel<ViewState>() {
 
     init {
         processDataEvent(DataEvent.LoadContacts)

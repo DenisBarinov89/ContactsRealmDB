@@ -7,14 +7,19 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactsrealmdb.databinding.ActivityMainBinding
+import com.example.contactsrealmdb.di.AppComponent
+import com.example.contactsrealmdb.di.DaggerAppComponent
 import com.example.contactsrealmdb.ui.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel: MainViewModel by viewModel()
+    @Inject
+    lateinit var viewModel: MainViewModel
+
     private val rvContacts: RecyclerView by lazy { findViewById(R.id.rvContacts) }
     private val adapter: ContactsAdapter by lazy {
         ContactsAdapter(
@@ -27,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
 
@@ -49,9 +55,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun render(viewState: ViewState) {
         Log.d("Check", "render")
-
-
-
         adapter.setData(viewState.contacts)
     }
 }

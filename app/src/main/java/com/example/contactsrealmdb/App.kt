@@ -1,19 +1,18 @@
 package com.example.contactsrealmdb
 
 import android.app.Application
-import com.example.contactsrealmdb.di.appModule
-import com.example.contactsrealmdb.di.dataBaseModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import com.example.contactsrealmdb.di.AppComponent
+import com.example.contactsrealmdb.di.DaggerAppComponent
 
 class App : Application() {
 
+    lateinit var appComponent: AppComponent
+
     override fun onCreate() {
         super.onCreate()
-
-        startKoin {
-            androidContext(this@App)
-            modules(appModule, dataBaseModule)
-        }
+        appComponent = DaggerAppComponent.factory().create(this)
     }
+
+
+
 }

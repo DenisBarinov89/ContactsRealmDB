@@ -1,12 +1,13 @@
 package com.example.contactsrealmdb.data
 
 
-import android.util.Log
+
 import com.example.contactsrealmdb.data.model.Contact
 import java.util.*
+import javax.inject.Inject
 
 
-class ContactRepositoryImpl(private val contactsDao: ContactsDao) : ContactRepository {
+class ContactRepositoryImpl @Inject constructor(private val contactsDao: ContactsDao) : ContactRepository {
 
     override suspend fun addContact(name: String?, surname: String?, number: String?) {
         val contact = Contact(

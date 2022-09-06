@@ -2,15 +2,21 @@ package com.example.contactsrealmdb.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.contactsrealmdb.App
 import com.example.contactsrealmdb.databinding.ActivityAddContactBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
 class AddContactActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddContactBinding
-    private val viewModel: MainViewModel by viewModel()
+
+
+    @Inject
+    lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityAddContactBinding.inflate(layoutInflater)
