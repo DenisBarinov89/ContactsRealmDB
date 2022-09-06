@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactsrealmdb.R
 import com.example.contactsrealmdb.data.model.Contact
@@ -40,20 +41,49 @@ class ContactsAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.tvNameAndSurname.text = "${contactsData[position].name} ${contactsData[position].surname}"
+        holder.tvNameAndSurname.text =
+            "${contactsData[position].name} ${contactsData[position].surname}"
         holder.tvNumber.text = contactsData[position].number
+
         holder.ivDelete.setOnClickListener {
+            Log.d("Check", "$position")
             onDeleteContactClicked.invoke(contactsData[position].id)
+
         }
+
         holder.ivEdit.setOnClickListener {
             onEditContactClicked.invoke(contactsData[position].id)
         }
     }
 
-    override fun getItemCount(): Int = contactsData.size
+    override fun getItemCount(): Int {
+
+        return contactsData.size
+    }
+
+    class CallbackContact(private val oldList: List<Contact>, private val newList: List<Contact>) :
+        DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            newList[newItemPosition] == oldList[oldItemPosition]
+
+    }
+
 
     fun setData(allContacts: List<Contact>) {
+        val oldList = contactsData
         contactsData = allContacts
-        notifyDataSetChanged()
+        val result = DiffUtil.calculateDiff(CallbackContact(oldList, contactsData))
+        result.dispatchUpdatesTo(this)
     }
+
+
 }

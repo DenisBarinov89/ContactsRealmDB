@@ -7,6 +7,9 @@
 
     <EditText
         android:id="@+id/etName"
+        android:nextFocusDown="@id/etSurname"
+        android:inputType="textCapWords"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -14,6 +17,8 @@
 
     <EditText
         android:id="@+id/etSurname"
+        android:nextFocusDown="@id/etNumber"
+        android:inputType="textCapWords"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -22,9 +27,9 @@
     <EditText
         android:id="@+id/etNumber"
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:inputType="phone"
         android:hint="Номер телефона" />
 
     <Button

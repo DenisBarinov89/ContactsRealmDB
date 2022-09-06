@@ -16,6 +16,8 @@ class AddContactActivity : AppCompatActivity() {
         binding = ActivityAddContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.etName.requestFocus()
+
         binding.btnSave.setOnClickListener {
 
             val id: String? = intent.getStringExtra("id")
@@ -40,8 +42,8 @@ class AddContactActivity : AppCompatActivity() {
                         )
                     )
                 }
-                finish()
             }
+            finish()
         }
     }
 }
